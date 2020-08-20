@@ -15,9 +15,25 @@ namespace CoderByte.Controllers
         private CoderByteDb db = new CoderByteDb();
 
         // GET: Client_Products
-        public ActionResult Index()
+        public ActionResult Index(string sortOrder)
         {
+            ViewBag.NameSortParm = String.IsNullOrEmpty(sortOrder) ? "ClientName_Desc" : "";
+
             var client_Products = db.Client_Products.Include(c => c.Client).Include(c => c.Product);
+
+            switch (sortOrder)
+            {
+                case "ClientName_Desc":
+                    client_Products = client_Products.OrderByDescending(s => s.Client.Name).ThenBy(s => s.Product.Name);
+                    break;
+                case "ProductName_Desc":
+                    client_Products = client_Products.OrderByDescending(s => s.Product.Name).ThenBy(s => s.Client.Name);
+                    break;
+                default:
+                    client_Products = client_Products.OrderBy(s => s.Client.Name).ThenBy(s => s.Product.Name);
+                    break;
+            }
+
             return View(client_Products.ToList());
         }
 

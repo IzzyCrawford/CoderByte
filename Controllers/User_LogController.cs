@@ -15,9 +15,25 @@ namespace CoderByte.Controllers
         private CoderByteDb db = new CoderByteDb();
 
         // GET: User_Log
-        public ActionResult Index()
+        public ActionResult Index(string sortOrder)
         {
+            ViewBag.NameSortParm = String.IsNullOrEmpty(sortOrder) ? "UserName" : "";
+
             var user_Log = db.User_Log.Include(u => u.Product).Include(u => u.User);
+
+            switch (sortOrder)
+            {
+                case "UserName":
+                    user_Log = user_Log.OrderByDescending(s => s.User.Name).ThenBy(s => s.Product.Name);
+                    break;
+                case "ProductName":
+                    user_Log = user_Log.OrderByDescending(s => s.Product.Name).ThenBy(s => s.User.Name);
+                    break;
+                default:
+                    user_Log = user_Log.OrderBy(s => s.User.Name).ThenBy(s => s.Product.Name);
+                    break;
+            }
+
             return View(user_Log.ToList());
         }
 

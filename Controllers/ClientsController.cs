@@ -15,9 +15,23 @@ namespace CoderByte.Controllers
         private CoderByteDb db = new CoderByteDb();
 
         // GET: Clients
-        public ActionResult Index()
+        public ActionResult Index(string sortOrder)
         {
+            ViewBag.NameSortParm = String.IsNullOrEmpty(sortOrder) ? "ClientDesc" : "";
             var clients = db.Clients.Include(c => c.Region);
+
+            switch (sortOrder)
+            {
+                case "ClientDesc":
+                    clients = clients.OrderByDescending(s => s.Name).ThenByDescending(s => s.Region.Location);
+                    break;
+                default:
+                    clients = clients.OrderBy(s => s.Name).ThenBy(s => s.Region.Location);
+                    break;
+            }
+
+
+
             return View(clients.ToList());
         }
 

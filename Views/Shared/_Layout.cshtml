@@ -21,6 +21,12 @@
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
+                    @Html.ActionLink("Users", "", "Users", new { area = "" }, new { @class = "navbar-brand" })
+                    @Html.ActionLink("User Logs", "", "User_Log", new { area = "" }, new { @class = "navbar-brand" })
+                    @Html.ActionLink("Clients", "", "Clients", new { area = "" }, new { @class = "navbar-brand" })
+                    @Html.ActionLink("Client Products", "", "Client_Products", new { area = "" }, new { @class = "navbar-brand" })
+                    @Html.ActionLink("Products", "", "Products", new { area = "" }, new { @class = "navbar-brand" })
+                    @Html.ActionLink("Regions", "", "Regions", new { area = "" }, new { @class = "navbar-brand" })
                 </ul>
             </div>
         </div>
