@@ -1,0 +1,58 @@
+﻿@using System.Web.Optimization
+@model IEnumerable<CoderByte.Models.Client>
+@{
+    ViewBag.Title = "Index";
+}
+
+<script type="text/javascript">
+    var jsonString = null;
+    function loadDoc() {
+        var e = document.getElementById("myDropdown");
+        var filter = e.options[e.selectedIndex].value;
+
+        var xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function () {
+            if (this.readyState == 4 && this.status == 200) {
+                jsonString = this.responseText;
+            }
+            if (jsonString != null) {
+                const jsonOBJ = JSON.parse(jsonString);
+
+                LoadReport(jsonOBJ, filter);
+            }
+
+        };
+
+        xhttp.open("POST", "/Reports/GetJsonResult", true);
+        xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+        xhttp.send();
+    }
+
+    function LoadReport(jsonOBJ, filter) {
+
+        var ojsonTblReport = $("#tblReport").DataTable();
+
+        ojsonTblReport.DataTable({
+            "data": jsonOBJ,
+            "columns": [
+                { "data": "Id" },
+                { "data": "Name" },
+                { "data": "Location" },
+                { "data": "MonthlyBasePrice" },
+                { "data": "Discount" }
+            ]
+        });
+    }
+</script>
+<h2>Reports</h2>
+
+<select id="myDropdown" class="dropdown-content" onchange="loadDoc()">
+    <option value="">  </option>
+    @foreach (var item in Model)
+    {
+        <option value="item.Id">@Html.DisplayFor(modelItem => item.Name)</option>
+    }
+</select>
+<div style="width:90%; margin:0 auto;">
+    <table id="tblReport" class="display" width="100%"></table>
+</div>
